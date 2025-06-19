@@ -1,4 +1,4 @@
-npdocument.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   // Authentication related elements
   const emailInput = document.getElementById('email');
   const otpInputField = document.getElementById('otpInput');
@@ -140,6 +140,63 @@ npdocument.addEventListener('DOMContentLoaded', () => {
       } catch (error) {
         registerStatus.style.color = 'red';
         registerStatus.textContent = 'Registration failed: ' + error.message;
+      }
+    });
+  }
+
+  // Posting tweet logic with posting limits and notifications
+  const postTweetButton = document.getElementById('postTweetButton');
+  const tweetInput = document.getElementById('tweetInput');
+
+  if (postTweetButton && tweetInput) {
+    postTweetButton.addEventListener('click', async () => {
+      const tweetText = tweetInput.value.trim();
+      if (!tweetText) {
+        alert('Please enter a tweet');
+        return;
+      }
+
+      try {
+        // Assuming userId is stored in localStorage after login
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+          alert('User not logged in');
+          return;
+        }
+
+        const response = await fetch(`/post/post/${userId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tweet: tweetText })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert(data.message || 'Tweet posted successfully');
+          tweetInput.value = '';
+
+          // Show notification if tweet contains "cricket" or "science"
+          if (window.Notification && Notification.permission === 'granted') {
+            if (/cricket|science/i.test(tweetText)) {
+              new Notification('New Tweet Notification', {
+                body: tweetText
+              });
+            }
+          } else if (window.Notification && Notification.permission !== 'denied') {
+            Notification.requestPermission().then(permission => {
+              if (permission === 'granted' && /cricket|science/i.test(tweetText)) {
+                new Notification('New Tweet Notification', {
+                  body: tweetText
+                });
+              }
+            });
+          }
+        } else {
+          alert(data.message || 'Failed to post tweet');
+        }
+      } catch (error) {
+        alert('Error posting tweet: ' + error.message);
       }
     });
   }

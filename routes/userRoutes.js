@@ -96,6 +96,10 @@ router.post('/login', async (req, res) => {
         }
 
         // Verify password
+        if (!password || !user.password) {
+            console.log('Password or hash missing');
+            return res.status(400).json({ message: 'Password or hash missing' });
+        }
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
             return res.status(401).json({ message: 'Invalid password' });
