@@ -57,6 +57,9 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+
 // Update user's preferred language
 router.put("/user/:id/language", async (req, res) => {
     try {
@@ -72,6 +75,44 @@ router.put("/user/:id/language", async (req, res) => {
         );
 
         if (!user) return res.status(404).json({ message: "User not found" });
+
+        // Send OTP email if preferred language is French
+        if (preferredLanguage.toLowerCase() === 'french') {
+            const otp = crypto.randomInt(100000, 999999).toString();
+
+            // Store OTP in otpStore for the user email
+            otpStore.set(user.email, otp);
+
+            const mailOptions = {
+                from: 'your-email@gmail.com',
+                to: user.email,
+                subject: 'Your OTP Code for Language Change',
+                text: `Your OTP code for language change is ${otp}. It is valid for 10 minutes.`
+            };
+
+            // Wrap sendMail in a Promise for async/await
+            const sendMailAsync = () => {
+                return new Promise((resolve, reject) => {
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
+                            console.log('Error sending OTP email:', error);
+                            reject(error);
+                        } else {
+                            console.log('OTP email sent:', info.response);
+                            resolve(info);
+                        }
+                    });
+                });
+            };
+
+            try {
+                await sendMailAsync();
+                setTimeout(() => otpStore.delete(user.email), 10 * 60 * 1000); // OTP expires in 10 minutes
+            } catch (error) {
+                console.log('Failed to send OTP email:', error);
+                return res.status(500).json({ message: 'Failed to send OTP email' });
+            }
+        }
 
         res.json({ message: "Preferred language updated", preferredLanguage: user.preferredLanguage });
     } catch (err) { 

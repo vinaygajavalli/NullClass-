@@ -79,18 +79,51 @@ document.addEventListener('DOMContentLoaded', () => {
           if (loginStatus) loginStatus.style.display = 'none';
           if (accessGrantedMessage) accessGrantedMessage.style.display = 'block';
           alert('Login successful without OTP for Microsoft browser');
+          // Store userId in localStorage (simulate fetching userId)
+          localStorage.setItem('userId', 'dummyUserId'); // Replace with actual userId from backend if available
           // Redirect to main app page after successful login
           window.location.href = 'index.html';
         } else {
           // Show OTP input and verify button for other cases
-          if (otpInputField) otpInputField.style.display = 'block';
-          if (verifyOtpButton) verifyOtpButton.style.display = 'block';
+          if (otpInputField) otpInputField.style.display = 'none';
+          if (verifyOtpButton) verifyOtpButton.style.display = 'none';
           alert('OTP sent to your email');
         }
       } catch (error) {
         alert('Failed to send OTP: ' + error.message);
       }
     });
+  }
+  
+  // Function to fetch and update profile details dynamically
+  async function fetchAndUpdateProfile() {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      console.log('User not logged in');
+      return;
+    }
+    try {
+      const response = await fetch(`/user/${userId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch user profile');
+      }
+      const user = await response.json();
+      const profileSection = document.getElementById('profile-details');
+      if (profileSection) {
+        profileSection.innerHTML = `
+          <h2>Profile Details</h2>
+          <p>Name: ${user.username || 'N/A'}</p>
+          <p>Email: ${user.email || 'N/A'}</p>
+        `;
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  }
+  
+  // Call fetchAndUpdateProfile on profile page load
+  if (window.location.pathname.endsWith('profile.html')) {
+    fetchAndUpdateProfile();
   }
 
   if (verifyOtpButton && emailInput && otpInputField) {
@@ -217,25 +250,71 @@ document.addEventListener('DOMContentLoaded', () => {
       // Enable OTP input and verify button on request
       if (otpInput) otpInput.disabled = false;
       if (verifyOtpButton) verifyOtpButton.disabled = false;
-      // Keep request button enabled to allow multiple requests
-      // requestOtpButton.disabled = true; // Commented out to fix test issue
+      // Enable request OTP button to allow multiple requests
+      requestOtpButton.disabled = false;
     });
   }
 
   if (verifyOtpButton && uploadAudioButton && uploadSuccessMessage) {
-    verifyOtpButton.addEventListener('click', () => {
-      // Simulate OTP verification success
-      if (otpInput && otpInput.value.trim() === '123456') {
-        uploadAudioButton.disabled = false;
-        uploadSuccessMessage.style.display = 'none';
+    verifyOtpButton.addEventListener('click', async () => {
+      const email = document.getElementById('email') ? document.getElementById('email').value.trim() : '';
+      const otp = otpInput ? otpInput.value.trim() : '';
+      if (!email || !otp) {
+        alert('Please enter both email and OTP');
+        return;
+      }
+      try {
+        const response = await fetch('/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otp })
+        });
+        const data = await response.json();
+        if (response.ok) {
+          uploadAudioButton.disabled = false;
+          uploadSuccessMessage.style.display = 'none';
+          alert(data.message || 'OTP verified successfully');
+        } else {
+          alert(data.message || 'OTP verification failed');
+        }
+      } catch (error) {
+        alert('Error verifying OTP: ' + error.message);
       }
     });
   }
 
   if (uploadAudioButton && uploadSuccessMessage) {
-    uploadAudioButton.addEventListener('click', () => {
-      // Simulate successful upload
-      uploadSuccessMessage.style.display = 'block';
+    uploadAudioButton.addEventListener('click', async () => {
+      const audioFileInput = document.getElementById('audioFileInput');
+      if (!audioFileInput || !audioFileInput.files || audioFileInput.files.length === 0) {
+        alert('Please select an audio file to upload');
+        return;
+      }
+      const file = audioFileInput.files[0];
+      const formData = new FormData();
+      formData.append('audio', file);
+      const email = document.getElementById('email') ? document.getElementById('email').value.trim() : '';
+      formData.append('email', email);
+
+      try {
+        const response = await fetch('/upload-audio', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await response.json();
+        if (response.ok) {
+          uploadSuccessMessage.style.display = 'block';
+          uploadSuccessMessage.textContent = data.message || 'Audio uploaded successfully';
+        } else {
+          uploadSuccessMessage.style.display = 'block';
+          uploadSuccessMessage.style.color = 'red';
+          uploadSuccessMessage.textContent = data.message || 'Audio upload failed';
+        }
+      } catch (error) {
+        uploadSuccessMessage.style.display = 'block';
+        uploadSuccessMessage.style.color = 'red';
+        uploadSuccessMessage.textContent = 'Error uploading audio: ' + error.message;
+      }
     });
   }
 
@@ -248,9 +327,13 @@ document.addEventListener('DOMContentLoaded', () => {
     payButton.addEventListener('click', () => {
       // Simulate payment time window check (10 to 11 AM IST)
       const now = new Date();
-      const hours = now.getUTCHours() + 5; // IST offset
-      const minutes = now.getUTCMinutes() + 30;
-      const istHours = (minutes >= 60) ? hours + 1 : hours;
+      let hours = now.getUTCHours() + 5; // IST offset
+      let minutes = now.getUTCMinutes() + 30;
+      if (minutes >= 60) {
+        minutes -= 60;
+        hours += 1;
+      }
+      const istHours = hours;
 
       if (istHours >= 10 && istHours < 11) {
         // Payment allowed
