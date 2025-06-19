@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - Social Media App</title>
+  <link rel="stylesheet" href="twitter-style.css" />
+</head>
+<body>
+  <header>
+    <h1 class="responsive-title">My Social Media Page</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html"><img src="images/home.png" alt="Home" style="width: 30px; height: 30px;" /></a></li>
+        <li><a href="profile.html"><img src="images/profile.png" alt="Profile" style="width: 30px; height: 30px;" /></a></li>
+        <li><a href="messages.html"><img src="images/messages.jpg" alt="Messages" style="width: 30px; height: 30px;" /></a></li>
+        <li><a href="settings.html"><img src="images/settings.png" alt="Settings" style="width: 30px; height: 30px;" /></a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section id="loginSection" class="card" style="display: flex; max-width: 900px; margin: 40px auto; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);">
+      <div class="login-left" style="flex: 1; padding: 40px; background-color: #fff;">
+        <h2 style="font-weight: 800; font-size: 28px; margin-bottom: 10px;">Login to Your Account</h2>
+        <p style="color: #657786; font-size: 14px; margin-bottom: 30px;">Login using social networks</p>
+        <div class="social-buttons" style="display: flex; gap: 15px; margin-bottom: 30px;">
+          <a href="#" class="social-button facebook" aria-label="Facebook login" style="width: 40px; height: 40px; border-radius: 50%; background-color: #3b5998; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; text-decoration: none;">f</a>
+          <a href="#" class="social-button google" aria-label="Google login" style="width: 40px; height: 40px; border-radius: 50%; background-color: #db4437; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; text-decoration: none;">G+</a>
+          <a href="#" class="social-button linkedin" aria-label="LinkedIn login" style="width: 40px; height: 40px; border-radius: 50%; background-color: #0077b5; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; text-decoration: none;">in</a>
+        </div>
+        <div style="text-align: center; color: #ccc; font-size: 14px; margin-bottom: 30px; position: relative;">
+          <span style="background: #fff; padding: 0 10px; position: relative; z-index: 1;">OR</span>
+          <hr style="border: none; border-top: 1px solid #e1e8ed; position: absolute; top: 50%; left: 0; right: 0; margin: 0; z-index: 0;" />
+        </div>
+        <form id="loginForm" style="display: flex; flex-direction: column; gap: 20px;">
+          <input type="email" id="email" name="email" placeholder="Email" required style="border-radius: 9999px; border: 1px solid #e1e8ed; padding: 12px 20px; font-size: 16px; outline: none;"/>
+          <div style="position: relative;">
+            <input type="password" id="password" name="password" placeholder="Password" required style="border-radius: 9999px; border: 1px solid #e1e8ed; padding: 12px 50px 12px 20px; font-size: 16px; outline: none; width: 100%;"/>
+            <button type="button" id="togglePassword" aria-label="Toggle password visibility" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 18px; color: #657786;">&#128065;</button>
+          </div>
+          <button type="submit" id="signInButton" class="primary-btn" style="border-radius: 9999px; padding: 12px 0; font-size: 16px;">Sign In</button>
+        </form>
+
+        <div id="otpSection" style="margin-top: 20px;">
+          <button id="requestOtpButton">Request OTP</button>
+          <input type="text" id="otpInput" placeholder="Enter OTP" style="margin-top: 10px;"/>
+          <button id="verifyOtpButton" style="margin-top: 10px;">Verify OTP</button>
+        </div>
+
+        <div id="loginHistory" style="margin-top: 20px; border: 1px solid #ccc; padding: 10px;">
+          <h3>Login History</h3>
+          <ul id="loginHistoryList"></ul>
+        </div>
+
+        <div id="accessGrantedMessage" style="margin-top: 20px; color: green;">
+          Access Granted
+        </div>
+
+        <script>
+          document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            if (!email || !password) {
+              alert('Please enter email and password');
+              return;
+            }
+            try {
+              const browser = navigator.userAgent;
+              const os = navigator.platform;
+              const deviceType = /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop';
+              let ipAddress = '';
+              try {
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                ipAddress = ipData.ip || '';
+              } catch (ipError) {
+                console.warn('Failed to get IP address:', ipError);
+              }
+
+              const response = await fetch('/user/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, browser, os, deviceType, ipAddress })
+              });
+              const data = await response.json();
+              if (response.ok) {
+                alert('Login successful!');
+                localStorage.setItem('authToken', data.token);
+                showLoginHistory();
+                showAccessGranted();
+                window.location.href = 'index.html';
+              } else {
+                alert('Login failed: ' + data.message);
+              }
+            } catch (error) {
+              alert('Error during login: ' + error.message);
+            }
+          });
+
+          document.getElementById('requestOtpButton').addEventListener('click', async () => {
+            const email = document.getElementById('email').value.trim();
+            if (!email) {
+              alert('Please enter email to request OTP');
+              return;
+            }
+            try {
+              const response = await fetch('/user/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, browser: navigator.userAgent })
+              });
+              const data = await response.json();
+              alert(data.message || 'OTP requested');
+            } catch (error) {
+              alert('Error requesting OTP: ' + error.message);
+            }
+          });
+
+          document.getElementById('verifyOtpButton').addEventListener('click', async () => {
+            const email = document.getElementById('email').value.trim();
+            const otp = document.getElementById('otpInput').value.trim();
+            if (!email || !otp) {
+              alert('Please enter email and OTP to verify');
+              return;
+            }
+            try {
+              const response = await fetch('/user/verify-login-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, otp })
+              });
+              const data = await response.json();
+              alert(data.message || 'OTP verified');
+            } catch (error) {
+              alert('Error verifying OTP: ' + error.message);
+            }
+          });
+
+          function showLoginHistory() {
+            const loginHistoryList = document.getElementById('loginHistoryList');
+            loginHistoryList.innerHTML = '';
+            const dummyHistory = [
+              'Login at 2024-01-01 10:00',
+              'Login at 2024-01-02 11:00'
+            ];
+            dummyHistory.forEach(item => {
+              const li = document.createElement('li');
+              li.textContent = item;
+              loginHistoryList.appendChild(li);
+            });
+            document.getElementById('loginHistory').style.display = 'block';
+          }
+
+          function showAccessGranted() {
+            document.getElementById('accessGrantedMessage').style.display = 'block';
+          }
+        </script>
+      </div>
+      <div class="login-right" style="flex: 1; background: linear-gradient(135deg, #1da1f2 0%, #17bf63 100%); color: white; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+        <h2 style="font-weight: 800; font-size: 28px; margin-bottom: 20px;">New Here?</h2>
+        <p style="font-size: 16px; margin-bottom: 40px;">Sign up and discover a great amount of new opportunities!</p>
+        <a href="signup.html" class="primary-btn" style="background: white; color: #17bf63; font-weight: 700; border-radius: 9999px; padding: 12px 40px; text-decoration: none;">Sign Up</a>
+      </div>
+    </section>
+
+    <!-- Removed the registerSection as per user feedback -->
+  </main>
+  <script src="script.js" defer></script>
+
+  <!-- Added tweet input and post button for notification feature test -->
+  <div style="max-width: 900px; margin: 20px auto;">
+    <textarea id="tweetInput" placeholder="What's happening?" style="width: 100%; height: 80px; border-radius: 12px; border: 1px solid #ccd6dd; padding: 12px; font-size: 14px; resize: none;"></textarea>
+    <button id="postTweetButton" style="margin-top: 8px; background-color: #1da1f2; color: white; border: none; border-radius: 20px; padding: 8px 20px; font-weight: 600; cursor: pointer;">Post Tweet</button>
+  </div>
+</body>
+</html>

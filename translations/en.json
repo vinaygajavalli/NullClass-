@@ -1,0 +1,19 @@
+    {
+  "userProfile": "User Profile",
+  "enableNotifications": "Enable Notifications:",
+  "upgradePlan": "Upgrade Plan",
+  "name": "Name:",
+  "followers": "Followers:",
+  "dateOfBirth": "Date of Birth:",
+  "emailId": "Email ID:",
+  "contactNumber": "Contact Number:",
+  "subscriptionType": "Subscription Type:",
+  "postsAllowed": "Posts Allowed:",
+  "expiryDate": "Expiry Date:",
+  "selectLanguage": "Select Language",
+  "loginHistory": "Login History",
+  "dateTime": "Date & Time",
+  "browser": "Browser",
+  "device": "Device",
+  "ipAddress": "IP Address"
+}

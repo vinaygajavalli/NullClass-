@@ -1,0 +1,19 @@
+{
+  "userProfile": "Perfil de Usuario",
+  "enableNotifications": "Habilitar Notificaciones:",
+  "upgradePlan": "Actualizar Plan",
+  "name": "Nombre:",
+  "followers": "Seguidores:",
+  "dateOfBirth": "Fecha de Nacimiento:",
+  "emailId": "Correo Electrónico:",
+  "contactNumber": "Número de Contacto:",
+  "subscriptionType": "Tipo de Suscripción:",
+  "postsAllowed": "Publicaciones Permitidas:",
+  "expiryDate": "Fecha de Expiración:",
+  "selectLanguage": "Seleccionar Idioma",
+  "loginHistory": "Historial de Inicio de Sesión",
+  "dateTime": "Fecha y Hora",
+  "browser": "Navegador",
+  "device": "Dispositivo",
+  "ipAddress": "Dirección IP"
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Subscription Plans - Social Media App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Subscription Plans</h1>
+  </header>
+  <main>
+    <section>
+      <h2>Choose Your Plan</h2>
+      <div class="plan-container">
+        <div class="plan" id="planFree">
+          <h3>Free Plan</h3>
+          <p>1 Tweet per day</p>
+          <button id="planFreeButton">Select Free</button>
+        </div>
+        <div class="plan" id="planBronze">
+          <h3>Bronze Plan</h3>
+          <p>₹100/month - 3 Tweets per day</p>
+          <button id="planBronze">Select Bronze</button>
+        </div>
+        <div class="plan" id="planSilver">
+          <h3>Silver Plan</h3>
+          <p>₹300/month - 5 Tweets per day</p>
+          <button id="planSilver">Select Silver</button>
+        </div>
+        <div class="plan" id="planGold">
+          <h3>Gold Plan</h3>
+          <p>₹1000/month - Unlimited Tweets</p>
+          <button id="planGold">Select Gold</button>
+        </div>
+      </div>
+      <button id="payButton">Pay Now</button>
+      <div id="paymentSuccessMessage" style="color: green; display: none;">Payment Successful!</div>
+      <div id="paymentErrorMessage" style="color: red; display: none;">Payment Failed or Outside Allowed Time</div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

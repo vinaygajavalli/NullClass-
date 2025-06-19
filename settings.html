@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Settings - Social Media App</title>
+  <link rel="stylesheet" href="twitter-style.css" />
+</head>
+<body>
+  <header>
+    <h1 class="responsive-title">My Social Media Page</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html"><img src="images/home.png" alt="Home" style="width: 30px; height: 30px;" /></a></li>
+        <li><a href="profile.html"><img src="images/profile.png" alt="Profile" style="width: 30px; height: 30px;" /></a></li>
+        <li><a href="messages.html"><img src="images/messages.jpg" alt="Messages" style="width: 30px; height: 30px;" /></a></li>
+        <li><a href="settings.html" class="active"><img src="images/settings.png" alt="Settings" style="width: 30px; height: 30px;" /></a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section id="subscription" class="responsive-section">
+      <h2>Subscription Plans</h2>
+      <p style="color: red; font-weight: bold;">Payments allowed only between 10:00 AM - 11:00 AM IST. Outside this window, payments are disabled.</p>
+      <form id="subscriptionForm" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+        <button type="button" class="subscription-plan" style="border: 1px solid #e1e8ed; border-radius: 12px; padding: 20px; width: 180px; text-align: center; cursor: pointer;" aria-pressed="false" role="checkbox" aria-checked="false" tabindex="0" id="planFree" data-value="free">
+          <h3 style="color: #0a74da;">Free</h3>
+          <p style="font-size: 24px; font-weight: bold;">₹0 / month</p>
+          <p>1 tweet per day</p>
+        </button>
+        <button type="button" class="subscription-plan" style="border: 1px solid #e1e8ed; border-radius: 12px; padding: 20px; width: 180px; text-align: center; cursor: pointer;" aria-pressed="false" role="checkbox" aria-checked="false" tabindex="0" id="planBronze" data-value="bronze">
+          <h3 style="color: #0a74da;">Bronze</h3>
+          <p style="font-size: 24px; font-weight: bold;">₹100 / month</p>
+          <p>3 tweets per day</p>
+        </button>
+        <button type="button" class="subscription-plan" style="border: 1px solid #e1e8ed; border-radius: 12px; padding: 20px; width: 180px; text-align: center; cursor: pointer;" aria-pressed="false" role="checkbox" aria-checked="false" tabindex="0" id="planSilver" data-value="silver">
+          <h3 style="color: #0a74da;">Silver</h3>
+          <p style="font-size: 24px; font-weight: bold;">₹300 / month</p>
+          <p>5 tweets per day</p>
+        </button>
+        <button type="button" class="subscription-plan" style="border: 1px solid #e1e8ed; border-radius: 12px; padding: 20px; width: 180px; text-align: center; cursor: pointer;" aria-pressed="false" role="checkbox" aria-checked="false" tabindex="0" id="planGold" data-value="gold">
+          <h3 style="color: #0a74da;">Gold</h3>
+          <p style="font-size: 24px; font-weight: bold;">₹1000 / month</p>
+          <p>Unlimited tweets</p>
+        </button>
+      </form>
+      <div style="margin-top: 20px; text-align: center;">
+        <button id="payButton" style="background-color: #1da1f2; color: white; border: none; border-radius: 9999px; padding: 12px 30px; cursor: pointer; font-weight: bold;">Pay</button>
+        <div id="paymentSuccessMessage" style="display: none; color: green; margin-top: 10px;">Payment successful! Invoice sent to your email.</div>
+        <div id="paymentErrorMessage" style="display: none; color: red; margin-top: 10px;">Payment failed or outside allowed time window.</div>
+      </div>
+    </section>
+
+    <section id="language" class="responsive-section" style="margin-top: 40px;">
+      <h2>Language Preferences</h2>
+      <p>Select your preferred language for the website.</p>
+      <select id="languageSelector">
+        <option value="en" selected>English</option>
+        <option value="es">Spanish</option>
+        <option value="hi">Hindi</option>
+        <option value="pt">Portuguese</option>
+        <option value="zh">Chinese</option>
+        <option value="fr">French</option>
+      </select>
+
+      <div id="emailOtpSection" style="display:none; margin-top: 20px;">
+        <p>Please verify your email to switch to French.</p>
+        <input type="email" id="emailInput" placeholder="Enter your email" />
+        <button id="requestEmailOtpButton">Request OTP</button>
+        <input type="text" id="emailOtpInput" placeholder="Enter OTP" />
+        <button id="verifyEmailOtpButton">Verify OTP</button>
+        <div id="emailOtpMessage" style="color: red; margin-top: 10px;"></div>
+      </div>
+
+      <div id="mobileOtpSection" style="display:none; margin-top: 20px;">
+        <p>Please verify your mobile number to switch language.</p>
+        <input type="tel" id="mobileInput" placeholder="Enter your mobile number" />
+        <button id="requestMobileOtpButton">Request OTP</button>
+        <input type="text" id="mobileOtpInput" placeholder="Enter OTP" />
+        <button id="verifyMobileOtpButton">Verify OTP</button>
+        <div id="mobileOtpMessage" style="color: red; margin-top: 10px;"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Subscription payment handling
+    document.getElementById('payButton').addEventListener('click', async () => {
+      const selectedPlanRadio = document.querySelector('input[name="subscriptionPlan"]:checked');
+      if (!selectedPlanRadio) {
+        alert('Please select a subscription plan before proceeding to payment.');
+        return;
+      }
+      const selectedPlan = selectedPlanRadio.value;
+      const planMap = {
+        free: { amount: 0, tweets: 1 },
+        bronze: { amount: 10000, tweets: 3 },
+        silver: { amount: 30000, tweets: 5 },
+        gold: { amount: 100000, tweets: Infinity }
+      };
+      const planInfo = planMap[selectedPlan];
+      if (!planInfo) {
+        alert('Invalid subscription plan selected.');
+        return;
+      }
+
+      // Check payment time window 10:00 AM to 11:00 AM IST
+      const now = new Date();
+      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+      const istOffset = 5.5 * 60 * 60000;
+      const ist = new Date(utc + istOffset);
+      const hours = ist.getHours();
+      if (hours < 10 || hours >= 11) {
+        document.getElementById('paymentErrorMessage').style.display = 'block';
+        document.getElementById('paymentSuccessMessage').style.display = 'none';
+        alert('Payments are allowed only between 10:00 AM and 11:00 AM IST.');
+        return;
+      }
+
+      // Simulate payment processing and email invoice sending
+      try {
+        // Here you would integrate with payment gateway API (Stripe, Razorpay, etc.)
+        // For demo, simulate success after 1 second delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Simulate sending email invoice (would be backend API call)
+        console.log(`Sending invoice email for plan ${selectedPlan} with amount ₹${planInfo.amount / 100}`);
+
+        document.getElementById('paymentSuccessMessage').style.display = 'block';
+        document.getElementById('paymentErrorMessage').style.display = 'none';
+      } catch (error) {
+        document.getElementById('paymentErrorMessage').style.display = 'block';
+        document.getElementById('paymentSuccessMessage').style.display = 'none';
+        alert('Payment failed: ' + error.message);
+      }
+    });
+
+    // Multi-language support with OTP verification
+    const translations = {
+      en: { welcome: "Welcome", subscription: "Subscription Plans", language: "Language Preferences" },
+      es: { welcome: "Bienvenido", subscription: "Planes de Suscripción", language: "Preferencias de Idioma" },
+      hi: { welcome: "स्वागत है", subscription: "सदस्यता योजनाएं", language: "भाषा प्राथमिकताएं" },
+      pt: { welcome: "Bem-vindo", subscription: "Planos de Assinatura", language: "Preferências de Idioma" },
+      zh: { welcome: "欢迎", subscription: "订阅计划", language: "语言偏好" },
+      fr: { welcome: "Bienvenue", subscription: "Plans d'abonnement", language: "Préférences linguistiques" }
+    };
+
+    function applyTranslation(lang) {
+      document.querySelector('h1.responsive-title').textContent = "My Social Media Page";
+      document.querySelector('#subscription h2').textContent = translations[lang].subscription;
+      document.querySelector('#language h2').textContent = translations[lang].language;
+      // Additional translations can be added here
+    }
+
+    const languageSelector = document.getElementById('languageSelector');
+    const emailOtpSection = document.getElementById('emailOtpSection');
+    const mobileOtpSection = document.getElementById('mobileOtpSection');
+    const emailInput = document.getElementById('emailInput');
+    const emailOtpInput = document.getElementById('emailOtpInput');
+    const emailOtpMessage = document.getElementById('emailOtpMessage');
+    const mobileInput = document.getElementById('mobileInput');
+    const mobileOtpInput = document.getElementById('mobileOtpInput');
+    const mobileOtpMessage = document.getElementById('mobileOtpMessage');
+
+    languageSelector.addEventListener('change', () => {
+      const selectedLang = languageSelector.value;
+      applyTranslation(selectedLang);
+
+      if (selectedLang === 'fr') {
+        emailOtpSection.style.display = 'block';
+        mobileOtpSection.style.display = 'none';
+      } else if (['es', 'hi', 'pt', 'zh'].includes(selectedLang)) {
+        emailOtpSection.style.display = 'none';
+        mobileOtpSection.style.display = 'block';
+      } else {
+        emailOtpSection.style.display = 'none';
+        mobileOtpSection.style.display = 'none';
+      }
+    });
+
+    // Simulated OTP sending and verification
+    document.getElementById('requestEmailOtpButton').addEventListener('click', () => {
+      const email = emailInput.value.trim();
+      if (!email) {
+        emailOtpMessage.textContent = "Please enter a valid email.";
+        return;
+      }
+      emailOtpMessage.textContent = "OTP sent to " + email;
+      // Simulate sending OTP email here
+    });
+
+    document.getElementById('verifyEmailOtpButton').addEventListener('click', () => {
+      const otp = emailOtpInput.value.trim();
+      if (otp === "123456") {
+        emailOtpMessage.style.color = "green";
+        emailOtpMessage.textContent = "Email verified successfully.";
+      } else {
+        emailOtpMessage.style.color = "red";
+        emailOtpMessage.textContent = "Invalid OTP.";
+      }
+    });
+
+    document.getElementById('requestMobileOtpButton').addEventListener('click', () => {
+      const mobile = mobileInput.value.trim();
+      if (!mobile.match(/^\d{10}$/)) {
+        mobileOtpMessage.textContent = "Please enter a valid 10-digit mobile number.";
+        return;
+      }
+      mobileOtpMessage.textContent = "OTP sent to " + mobile;
+      // Simulate sending OTP SMS here
+    });
+
+    document.getElementById('verifyMobileOtpButton').addEventListener('click', () => {
+      const otp = mobileOtpInput.value.trim();
+      if (otp === "123456") {
+        mobileOtpMessage.style.color = "green";
+        mobileOtpMessage.textContent = "Mobile number verified successfully.";
+      } else {
+        mobileOtpMessage.style.color = "red";
+        mobileOtpMessage.textContent = "Invalid OTP.";
+      }
+    });
+  </script>
+</body>
+</html>

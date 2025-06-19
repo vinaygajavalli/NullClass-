@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profile - Social Media App</title>
+  <link rel="stylesheet" href="twitter-style.css" />
+  <style>
+    /* Simple styles for profile navigation */
+    .profile-nav {
+      display: flex;
+      gap: 20px;
+      background-color: #4d4c9f;
+      padding: 10px;
+      color: white;
+      cursor: pointer;
+    }
+    .profile-nav div {
+      padding: 8px 16px;
+      border-radius: 4px;
+    }
+    .profile-nav .active {
+      background-color: #3a3790;
+      font-weight: bold;
+    }
+    .profile-section {
+      display: none;
+      margin: 20px;
+    }
+    .profile-section.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="responsive-title">My Social Media Page</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html"><img src="images/home.png" alt="Home" style="width: 30px; height: 30px;" /></a></li>
+        <li><a href="profile.html"><img src="images/profile.png" alt="Profile" style="width: 30px; height: 30px;" /></a></li>
+        <li><a href="messages.html"><img src="images/messages.jpg" alt="Messages" style="width: 30px; height: 30px;" /></a></li>
+        <li><a href="settings.html"><img src="images/settings.png" alt="Settings" style="width: 30px; height: 30px;" /></a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section id="profile-details" class="responsive-section">
+      <h2>Profile Details</h2>
+      <p>Name: John Doe</p>
+      <p>Email: john.doe@example.com</p>
+      <!-- Add more profile details as needed -->
+    </section>
+    <section id="notification-settings" class="responsive-section" style="margin-top: 20px;">
+      <h2>Notification Settings</h2>
+      <label for="notificationToggle">
+        <input type="checkbox" id="notificationToggle" />
+        Enable Notifications
+      </label>
+    </section>
+    <style>
+      table.login-history-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+      }
+      table.login-history-table th,
+      table.login-history-table td {
+        border: 1px solid #e1e8ed;
+        padding: 8px 12px;
+        text-align: left;
+      }
+      table.login-history-table th {
+        background-color: #f5f8fa;
+        font-weight: 600;
+      }
+      table.login-history-table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+    </style>
+    <section id="login-history" class="responsive-section">
+      <h2>Login History</h2>
+      <p>Recent login details with browser, OS, device type, IP & authentication method.</p>
+      <table class="login-history-table">
+        <thead>
+          <tr>
+            <th>Date & Time</th>
+            <th>Browser</th>
+            <th>OS</th>
+            <th>Device</th>
+            <th>IP Address</th>
+            <th>Auth Method</th>
+          </tr>
+        </thead>
+        <tbody id="loginHistoryBody">
+          <!-- Dynamic login history rows will be inserted here -->
+        </tbody>
+      </table>
+    </section>
+    <section id="current-subscription" class="responsive-section">
+      <h2>Current Subscription Plan</h2>
+      <p>Plan: Free</p>
+      <p>Expires: N/A</p>
+    </section>
+</main>
+  <footer style="background-color: #192734; color: white; padding: 10px 20px; text-align: center;">
+    <p>© 2023 My Social Media Page</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

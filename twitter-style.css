@@ -1,0 +1,275 @@
+/* Reset and Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;
+    color: #0f1419;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header and Navigation */
+header {
+    background-color: #15202b;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #38444d;
+}
+
+header h1.responsive-title {
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+nav ul li {
+    display: flex;
+    align-items: center;
+}
+
+nav ul li a {
+    color: #8899a6;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 9999px;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+nav ul li a:hover,
+nav ul li a:focus {
+    background-color: #1b2836;
+    color: #1da1f2;
+}
+
+nav ul li a.active {
+    color: #1da1f2;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #15202b;
+    color: #8899a6;
+    font-size: 0.85rem;
+    margin-top: auto;
+}
+
+/* Main Layout */
+main {
+    display: flex;
+    flex: 1;
+    max-width: 1200px;
+    margin: 20px auto;
+    gap: 20px;
+    padding: 0 20px;
+}
+
+/* Sidebar */
+.sidebar {
+    flex: 0 0 250px;
+    background-color: #f5f8fa;
+    border-radius: 16px;
+    padding: 20px;
+    height: fit-content;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+}
+
+/* Content Area */
+.content {
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+}
+
+/* Buttons */
+button {
+    background-color: #1da1f2;
+    border: none;
+    color: white;
+    padding: 10px 16px;
+    font-weight: 600;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+button:hover,
+button:focus {
+    background-color: #0d8ddb;
+}
+
+/* Selected subscription plan button */
+.selected-plan {
+    background-color: #0d8ddb !important;
+    box-shadow: 0 0 8px #0d8ddb;
+}
+
+/* Inputs and Textareas */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e1e8ed;
+    border-radius: 9999px;
+    font-size: 1rem;
+    color: #0f1419;
+    transition: border-color 0.2s ease-in-out;
+    font-family: inherit;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #1da1f2;
+}
+
+/* Cards */
+.card {
+    background-color: #ffffff;
+    border: 1px solid #e1e8ed;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+    margin-bottom: 20px;
+}
+
+/* Tweet Card */
+.tweet-card {
+    display: flex;
+    gap: 12px;
+    border-bottom: 1px solid #e1e8ed;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+
+.tweet-card img.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.tweet-content p {
+    margin-bottom: 6px;
+}
+
+.tweet-actions button {
+    background: none;
+    border: none;
+    color: #1da1f2;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 12px;
+    padding: 4px 8px;
+    border-radius: 9999px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.tweet-actions button:hover,
+.tweet-actions button:focus {
+    background-color: #e8f5fd;
+}
+
+/* Posting Area */
+.post-area {
+    margin-bottom: 20px;
+}
+
+.post-area textarea {
+    resize: none;
+    border-radius: 16px;
+    border: 1px solid #e1e8ed;
+    padding: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    color: #0f1419;
+}
+
+.post-controls {
+    margin-top: 8px;
+    display: flex;
+    gap: 12px;
+}
+
+.primary-btn {
+    background-color: #1da1f2;
+    color: white;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.primary-btn:hover,
+.primary-btn:focus {
+    background-color: #0d8ddb;
+}
+
+/* Posting Rules */
+.posting-rules {
+    background-color: #f5f8fa;
+    border: 1px solid #e1e8ed;
+    border-radius: 16px;
+    padding: 16px;
+    margin-top: 12px;
+    box-shadow: none;
+}
+
+/* Responsive Layout */
+@media (max-width: 1024px) {
+    main {
+        flex-direction: column;
+        padding: 0 10px;
+        max-width: 100%;
+    }
+    .sidebar {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .content {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    header h1.responsive-title {
+        font-size: 1.2rem;
+    }
+    nav ul {
+        gap: 15px;
+    }
+    .tweet-card img.avatar {
+        width: 40px;
+        height: 40px;
+    }
+    button, input[type="text"], input[type="email"], input[type="tel"], textarea, select {
+        font-size: 0.9rem;
+    }
+}
